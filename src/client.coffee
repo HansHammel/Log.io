@@ -21,6 +21,8 @@ backbone.$ = $
 io = require 'socket.io-client'
 _ = require 'underscore'
 templates = require './templates'
+Convert = require 'ansi-to-html'
+convert = new Convert()
 
 # Cap LogMessages collection size
 MESSAGE_CAP = 5000
@@ -78,7 +80,7 @@ class LogMessage extends backbone.Model
   ROPEN = new RegExp '<','ig'
   RCLOSE = new RegExp '>','ig'
   render_message: ->
-    @get('message').replace(ROPEN, '&lt;').replace(RCLOSE, '&gt;')
+    convert.toHtml(@get('message').replace(ROPEN, '&lt;').replace(RCLOSE, '&gt;')):
 
 class LogMessages extends backbone.Collection
   model: LogMessage
