@@ -80,7 +80,7 @@ class LogMessage extends backbone.Model
   ROPEN = new RegExp '<','ig'
   RCLOSE = new RegExp '>','ig'
   render_message: ->
-    convert.toHtml(@get('message').replace(ROPEN, '&lt;').replace(RCLOSE, '&gt;')):
+    convert.toHtml(@get('message').replace(ROPEN, '&lt;').replace(RCLOSE, '&gt;'))
 
 class LogMessages extends backbone.Collection
   model: LogMessage
