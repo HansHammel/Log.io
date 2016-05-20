@@ -90,6 +90,7 @@ class LogServer extends events.EventEmitter
     # Create TCP listener socket
     @listener = net.createServer (socket) =>
       socket._buffer = ''
+      socket.on 'connect', =>@_log.info 'TYLKO RAZ!'
       socket.on 'data', (data) => @_receive data, socket
       socket.on 'error', => @_tearDown socket
       socket.on 'close', => @_tearDown socket
