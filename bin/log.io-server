@@ -5,10 +5,15 @@ logging = new winston.Logger({
     level: 'error'
   })]
 });
-homeDir = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
-webConf = require(homeDir + '/.log.io/web_server.conf').config;
+rootDir = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
+var processCwd = process.argv[2];
+if (processCwd && processCwd === 'yes') {
+  rootDir = process.cwd()
+}
+
+webConf = require(rootDir + '/.log.io/web_server.conf').config;
 webConf.logging = logging;
-logConf = require(homeDir + '/.log.io/log_server.conf').config;
+logConf = require(rootDir + '/.log.io/log_server.conf').config;
 logConf.logging = logging;
 server = require('../index.js');
 logServer = new server.LogServer(logConf);
