@@ -72,6 +72,18 @@ class LogStream extends events.EventEmitter
     rstream.on 'data', (data) =>
       lines = data.split "\n"
       @emit 'new_log', line for line in lines when line
+      
+  readFileFromTheBeginning: (path, curr, prev) ->
+    # Use file offset information to stream new log lines from file
+    return if curr < prev
+    rstream = fs.createReadStream path,
+      encoding: 'utf8'
+      start: prev
+      end: curr
+    # Emit 'new_log' event for every captured log line
+    rstream.on 'data', (data) =>
+      lines = data.split "\n"
+      @emit 'new_log', line for line in lines when line
 
 ###
 LogHarvester creates LogStreams and opens a persistent TCP connection to the server.
