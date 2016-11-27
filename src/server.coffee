@@ -72,6 +72,7 @@ class LogStream extends _LogObject
   _type: 'stream'
   _pclass: -> LogNode
   _pcollection: -> @logServer.logNodes
+  _history: []
 
 ###
 LogServer listens for TCP connections.  It parses & validates
@@ -218,6 +219,9 @@ class WebServer
     io.set 'origins', @restrictSocket
     @listener = io.sockets
 
+    _logger = @_log
+    logStreams = @logStreams
+
     _on = (args...) => @logServer.on args...
     _emit = (_event, msg) =>
       @_log.debug "Relaying: #{_event}"
@@ -240,15 +244,23 @@ class WebServer
     # Bind new log event from Logserver to web client
     _on 'new_log', (stream, node, level, message) =>
       _emit 'ping', {stream: stream.name, node: node.name}
-      # Only send message to web clients watching logStream
-      @listener.in("#{stream.name}:#{node.name}").emit 'new_log',
+      logObject =
         stream: stream.name
         node: node.name
         level: level
         message: message
 
+      # Add the log to the stream history
+      stream._history.push logObject
+      while stream._history.length > 100
+        stream._history.shift()
+
+      # Only send message to web clients watching logStream
+      @listener.in("#{stream.name}:#{node.name}").emit 'new_log', logObject
+
     # Bind web client connection, events to web server
     @listener.on 'connection', (wclient) =>
+      _logger.info 'New connection!'
       wclient.emit 'add_node', node.toDict() for n, node of @logNodes
       wclient.emit 'add_stream', stream.toDict() for s, stream of @logStreams
       for n, node of @logNodes
@@ -257,8 +269,15 @@ class WebServer
       wclient.emit 'initialized'
       wclient.on 'watch', (pid) ->
         wclient.join pid
+        # Send history
+        sname = (pid.split ':')[0]
+        stream = logStreams[sname]
+        if stream
+          _logger.info 'sending history items', stream._history.length
+          wclient.emit 'new_log', logObject for n, logObject of stream._history
       wclient.on 'unwatch', (pid) ->
         wclient.leave pid
+
     @_log.info 'Server started, listening...'
 
 exports.LogServer = LogServer
