@@ -711,4 +711,7 @@ class LogStatsView extends backbone.View
     @rendered = true
     @
 
+is_https = window.location.href.indexOf('https') == 0
+client = new WebClient({ secure: is_https }, localStorage)
+
 exports.WebClient = WebClient

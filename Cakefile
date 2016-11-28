@@ -1,12 +1,12 @@
 {spawn, exec} = require 'child_process'
 fs = require 'fs'
 
-ENV = '/usr/bin/env'
-BROWSERIFY = "#{ ENV } browserify"
-COFFEE = "#{ ENV } coffee"
-MOCHA = "#{ ENV } mocha"
-LESS = "#{ ENV } lessc"
-NODE = "#{ ENV } node"
+
+BROWSERIFY = "sh ./node_modules/.bin/browserify"
+COFFEE = "sh ./node_modules/.bin/coffee"
+MOCHA = "sh ./node_modules/.bin/mocha"
+LESS = "sh ./node_modules/.bin/lessc"
+
 
 TEMPLATE_SRC = "#{ __dirname }/templates"
 TEMPLATE_OUTPUT = "#{ __dirname }/src/templates.coffee"
@@ -27,12 +27,12 @@ task 'compile', "Compiles CoffeeScript src/*.coffee to lib/*.js", ->
 
 task 'browserify', "Compiles client.coffee to browser-friendly JS", ->
   console.log "Browserifying src/client.coffee to lib/log.io.js"
-  exec "#{BROWSERIFY} src/client.coffee --exports process,require -o #{ __dirname }/lib/log.io.js", (err, stdout, stderr) ->
+  exec "#{BROWSERIFY} -t coffeeify --extension=\".coffee\" src/client.coffee --exports process,require -o #{ __dirname }/lib/log.io.js", (err, stdout, stderr) ->
     console.log stdout + stderr if err
 
 task 'less', "Compiles less templates to CSS", ->
   console.log "Compiling src/less/* to lib/log.io.css"
-  exec "#{LESS} #{__dirname}/src/less/log.io.less -compress -o #{__dirname}/lib/log.io.css", (err, stdout, stderr) ->
+  exec "#{LESS} #{__dirname}/src/less/log.io.less #{__dirname}/lib/log.io.css", (err, stdout, stderr) ->
     throw err if err
     console.log stdout + stderr if stdout + stderr
 

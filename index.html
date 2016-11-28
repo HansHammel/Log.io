@@ -9,10 +9,5 @@
   <body>
     <div id="web_client"></div>
     <script src="lib/log.io.js"></script>
-    <script>
-      var cli = require("/src/client.coffee");
-      var is_https = window.location.href.indexOf("https") == 0;
-      client = new cli.WebClient({secure: is_https}, localStorage);
-    </script>
   </body>
 </html>
