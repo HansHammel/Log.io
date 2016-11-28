@@ -45,6 +45,8 @@ task 'ensure:configuration', "Ensures that config files exist in ~/.log.io/", ->
   console.log "If this fails, run npm using a specific user: npm install -g log.io --user 'ubuntu'"
   homedir = process.env[if process.platform is 'win32' then 'USERPROFILE' else 'HOME']
   ldir = homedir + '/.log.io/'
+  cdir = ldir + 'cache/'
+  fs.mkdirSync cdir if not fs.existsSync cdir  
   fs.mkdirSync ldir if not fs.existsSync ldir
   for c in ['harvester', 'log_server', 'web_server']
     path = ldir + "#{c}.conf"

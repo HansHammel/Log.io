@@ -28,6 +28,7 @@ webServer.run()
 ###
 
 fs = require 'fs'
+path = require 'path'
 net = require 'net'
 http = require 'http'
 https = require 'https'
@@ -101,7 +102,8 @@ class LogServer extends events.EventEmitter
     # Destroy a client socket
     @_log.error 'Lost TCP connection...'
     if socket.node
-      @_removeNode socket.node.name
+      #@_removeNode socket.node.name
+      @_removeNode socket.node.name if socket.node
       delete socket.node
 
   _receive: (data, socket) =>
@@ -148,6 +150,12 @@ class LogServer extends events.EventEmitter
     node = @logNodes[nname] or @_addNode nname, sname
     stream = @logStreams[sname] or @_addStream sname, nname
     @emit 'new_log', stream, node, logLevel, message
+    # Write log to cache file
+    now = new Date();
+    fs.appendFile "#{logConf.cachePath}/#{stream.name}:#{node.name}",
+      JSON.stringify({time: now, message: message, level: logLevel}) + "\n",
+      (error) ->
+          console.error("Error writing file", error) if error    
 
   __add: (name, pnames, _collection, _objClass, objName) ->
     @_log.info "Adding #{objName}: #{name} (#{pnames})"
@@ -171,6 +179,7 @@ class LogServer extends events.EventEmitter
     if socket.node
       socket.write 'ping'
       setTimeout (=> @_ping socket), 2000
+      setInterval (-> socket.write 'ping'), 2000      
 
 
 
@@ -199,7 +208,7 @@ class WebServer
         if not req.ip.match ips
           return res.send 403, "Your IP (#{req.ip}) is not allowed."
         next()
-    staticPath = config.staticPath ? __dirname + '/../'
+    staticPath = config.staticPath ? path.join __dirname, '..'
     app.use express.static staticPath
 
   _createServer: (config, app) ->

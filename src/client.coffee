@@ -12,12 +12,46 @@ screen.on 'new_log', (stream, node, level, message) ->
 
 ###
 
+#if process.browser
+#  $ = require 'jquery'
+#else
+#  $ = eval "require('jquery')"
+#window.$ = window.jQuery = require('jquery');
 if process.browser
-  $ = require 'jquery-browserify'
+  jQuery = $ = require('jquery')
 else
-  $ = eval "require('jquery')"
+  global.document = require('jsdom').jsdom('<html></html>')
+  global.window = document.defaultView
+  global.$ = global.jQuery = require('jquery')
+  global.navigator = window.navigator
+  global.window.localStorage = localStorage = global.window.sessionStorage = sessionStorage =
+    getItem: (key) ->
+      @[key]
+    setItem: (key, value) ->
+      @[key] = value
+      return
+  #$=window.$;
+  $ = global.$
+  #var jsdom = require("jsdom"); 
+  #window = jsdom.jsdom().defaultView;
+  #$ = require("jquery")(jsdom.jsdom().createWindow()); 
+  #$ = eval("require('jquery')");
 backbone = require 'backbone'
 backbone.$ = $
+#backbone.Collection::update = (collection) ->
+#  _ids = _(collection).chain().reduce(((ids, model) ->
+#    id = model.id
+#    needle = @get(id)
+#    if needle
+#      needle.set model
+#    else
+#      @add model
+#    ids.concat model.id
+#  ), [], this)
+#  @remove @reject((model) ->
+#    _ids.include model.id
+#  )
+#  return
 io = require 'socket.io-client'
 _ = require 'underscore'
 templates = require './templates'
@@ -250,6 +284,7 @@ class WebClient
           message: message
 
   _ping: (msg) =>
+    #if msg
     {stream, node} = msg
     stream = @logStreams.get stream
     node = @logNodes.get node

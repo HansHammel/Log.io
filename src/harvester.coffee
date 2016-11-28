@@ -26,45 +26,60 @@ harvester.run()
 ###
 
 fs = require 'fs'
+path = require 'path'
 net = require 'net'
 events = require 'events'
 winston = require 'winston'
 
 ###
-LogStream is a group of local files paths.  It watches each file for
+LogStream is a group of local files files.  It watches each file for
 changes, extracts new log messages, and emits 'new_log' events.
 
 ###
 class LogStream extends events.EventEmitter
-  constructor: (@name, @paths, @_log) ->
+  constructor: (@name, @files, @_log) ->
 
   watch: ->
     @_log.info "Starting log stream: '#{@name}'"
-    @_watchFile path for path in @paths
+    @_watchFile file for file in @files
     @
 
-  _watchFile: (path) ->
-      if not fs.existsSync path
-        @_log.error "File doesn't exist: '#{path}'"
-        setTimeout (=> @_watchFile path), 1000
+  _sendWithBuffer: (data, last = false) ->
+      @buffer += data
+      lines = @buffer.split "\n"
+      @buffer = if last then '' else lines.pop()
+      @emit 'new_log', line for line in lines when line
+
+  _watchFile: (file) ->
+      if not fs.existsSync file
+        #@_log.error "File doesn't exist: '#{file}'"
+        @_log.error "File doesn't exist_: '#{file}'"
+        setTimeout (=> @_watchFile file), 1000
         return
-      @_log.info "Watching file: '#{path}'"
-      currSize = fs.statSync(path).size
-      watcher = fs.watch path, (event, filename) =>
+      #@_log.info "Watching file: '#{file}'"
+      @_log.info "Watching file_: '#{file}'"
+      @buffer = ''
+      currSize = fs.statSync(file).size
+      watcher = fs.watch file, (event, filename) =>
         if event is 'rename'
           # File has been rotated, start new watcher
+          @_sendWithBuffer '', true
           watcher.close()
-          @_watchFile path
+          @_watchFile file
         if event is 'change'
           # Capture file offset information for change event
-          fs.stat path, (err, stat) =>
-            @_readNewLogs path, stat.size, currSize
-            currSize = stat.size
+          fs.stat file, (err, stat) =>
+            #@_readNewLogs file, stat.size, currSize
+            #currSize = stat.size
+            currSize = 0
+            if stat
+              @_readNewLogs file, stat.size, currSize
+              currSize = stat.size
 
-  _readNewLogs: (path, curr, prev) ->
+  _readNewLogs: (file, curr, prev) ->
     # Use file offset information to stream new log lines from file
     return if curr < prev
-    rstream = fs.createReadStream path,
+    rstream = fs.createReadStream file,
       encoding: 'utf8'
       start: prev
       end: curr
@@ -72,11 +87,12 @@ class LogStream extends events.EventEmitter
     rstream.on 'data', (data) =>
       lines = data.split "\n"
       @emit 'new_log', line for line in lines when line
+      @_sendWithBuffer data
       
-  readFileFromTheBeginning: (path, curr, prev) ->
+  readFileFromTheBeginning: (file, curr, prev) ->
     # Use file offset information to stream new log lines from file
     return if curr < prev
-    rstream = fs.createReadStream path,
+    rstream = fs.createReadStream file,
       encoding: 'utf8'
       start: prev
       end: curr
@@ -97,7 +113,7 @@ class LogHarvester
     {@nodeName, @server} = config
     @delim = config.delimiter ? '\r\n'
     @_log = config.logging ? winston
-    @logStreams = (new LogStream s, paths, @_log for s, paths of config.logStreams)
+    @logStreams = (new LogStream s, files, @_log for s, files of config.logStreams)
 
   run: ->
     @_connect()
