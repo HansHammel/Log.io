@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 winston = require('winston');
 logging = new winston.Logger({
   transports: [ new winston.transports.Console({
