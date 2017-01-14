@@ -1,5 +1,16 @@
 # Merged coffee version (not fully working, yet)
 
+[![Build Status](https://secure.travis-ci.org/HansHammel/Log.io.coffee.png?branch=master)](http://travis-ci.org/HansHammel/Log.io.coffee)
+[![Inline docs](http://inch-ci.org/github/HansHammel/Log.io.coffee.svg?branch=master)](http://inch-ci.org/github/HansHammel/Log.io.coffee)
+[![star this repo](http://githubbadges.com/star.svg?user=HansHammel&repo=Log.io.coffee&style=flat&color=fff&background=007ec6)](https://github.com/HansHammel/Log.io.coffee)
+[![fork this repo](http://githubbadges.com/fork.svg?user=HansHammel&repo=Log.io.coffee&style=flat&color=fff&background=007ec6)](https://github.com/HansHammel/Log.io.coffee/fork)
+[![david dependency](https://img.shields.io/david/HansHammel/Log.io.coffee.svg)](https://david-dm.org/HansHammel/Log.io.coffee)
+[![david devDependency](https://img.shields.io/david/dev/HansHammel/Log.io.coffee.svg)](https://david-dm.org/HansHammel/Log.io.coffee)
+[![david optionalDependency](https://img.shields.io/david/optional/HansHammel/Log.io.coffee.svg)](https://david-dm.org/HansHammel/Log.io.coffee)
+[![david peerDependency](https://img.shields.io/david/peer/HansHammel/Log.io.coffee.svg)](https://david-dm.org/HansHammel/Log.io.coffee)
+[![npms score](https://badges.npms.io/Log.io.coffee.svg)](https://www.np.coffee.com/package/Log.io.coffee)
+[![Known Vulnerabilities](https://snyk.io/test/github/HansHammel/Log.io.coffee.svg)](https://snyk.io/test/github/HansHammel/Log.io.coffee)
+
 ## So what has changed with this forked version?
 
 UI changes only.
