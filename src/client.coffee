@@ -38,20 +38,6 @@ else
   #$ = eval("require('jquery')");
 backbone = require 'backbone'
 backbone.$ = $
-#backbone.Collection::update = (collection) ->
-#  _ids = _(collection).chain().reduce(((ids, model) ->
-#    id = model.id
-#    needle = @get(id)
-#    if needle
-#      needle.set model
-#    else
-#      @add model
-#    ids.concat model.id
-#  ), [], this)
-#  @remove @reject((model) ->
-#    _ids.include model.id
-#  )
-#  return
 io = require 'socket.io-client'
 _ = require 'underscore'
 templates = require './templates'
@@ -164,8 +150,8 @@ class LogScreen extends backbone.Model
     pairIds.push pid if pid not in pairIds
     stream.trigger 'lwatch', node, @
     node.trigger 'lwatch', stream, @
-    stream.screens.update @
-    node.screens.update @
+    stream.screens.set @
+    node.screens.set @
     @collection.trigger 'addPair'
 
   removePair: (stream, node) ->
