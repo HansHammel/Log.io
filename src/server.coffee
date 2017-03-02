@@ -224,7 +224,6 @@ class WebServer
     @_log.info 'Starting Log.io Web Server...'
     @logServer.run()
     io = io.listen @http.listen @port, @host
-    io.set 'log level', 1
     io.set 'origins', @restrictSocket
     @listener = io.sockets
 
