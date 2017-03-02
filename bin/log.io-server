@@ -19,7 +19,7 @@ logConf = require(rootDir + '/.log.io/log_server.conf').config;
 logConf.logging = logging;
 console.log(logConf)
 if (logConf.cachePath === undefined) {
-  logConf.cachePath = homeDir + '/.log.io/cache'
+  logConf.cachePath = rootDir + '/.log.io/cache'
 }
 if (!fs.existsSync(logConf.cachePath)) {
   throw Error("invalid cachePath [" + logConf.cachePath + "]")
