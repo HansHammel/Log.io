@@ -567,11 +567,11 @@ class LogScreensPanel extends backbone.View
   _purgeRenderedLogsInEachScreen: =>
     $('.log_screens .purge_notif').toggle(false)
     @$el.find(".log_screen .messages").each ->
-      msize = $(@).find(".msg").children().size()
+      msize = $(@).find(".msg").children().length
       $(@).find(".msg").children().slice(1, (msize/2)).remove()
 
   _checkThresholdForLogsRendered: (e) =>
-    sizePercentage = ($('.messages .msg').children().size() / gLogsRenderedThreshold) * 100
+    sizePercentage = ($('.messages .msg').children().length / gLogsRenderedThreshold) * 100
 
     if sizePercentage  > 100 #100percent
       #purge automatically
