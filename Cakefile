@@ -2,10 +2,10 @@
 fs = require 'fs'
 
 ENV = '/usr/bin/env'
-BROWSERIFY = "#{ ENV } browserify"
-COFFEE = "#{ ENV } coffee"
-MOCHA = "#{ ENV } mocha"
-LESS = "#{ ENV } lessc"
+BROWSERIFY = "#{ ENV } ./node_modules/.bin/browserify"
+COFFEE = "#{ ENV } ./node_modules/.bin/coffee"
+MOCHA = "#{ ENV } ./node_modules/.bin/mocha"
+LESS = "#{ ENV } ./node_modules/.bin/lessc"
 
 TEMPLATE_SRC = "#{ __dirname }/templates"
 TEMPLATE_OUTPUT = "#{ __dirname }/src/templates.coffee"
