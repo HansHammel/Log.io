@@ -1,12 +1,11 @@
 {spawn, exec} = require 'child_process'
 fs = require 'fs'
 
-
-BROWSERIFY = "sh ./node_modules/.bin/browserify"
-COFFEE = "sh ./node_modules/.bin/coffee"
-MOCHA = "sh ./node_modules/.bin/mocha"
-LESS = "sh ./node_modules/.bin/lessc"
-
+ENV = '/usr/bin/env'
+BROWSERIFY = "#{ ENV } browserify"
+COFFEE = "#{ ENV } coffee"
+MOCHA = "#{ ENV } mocha"
+LESS = "#{ ENV } lessc"
 
 TEMPLATE_SRC = "#{ __dirname }/templates"
 TEMPLATE_OUTPUT = "#{ __dirname }/src/templates.coffee"
@@ -46,8 +45,8 @@ task 'ensure:configuration', "Ensures that config files exist in ~/.log.io/", ->
   homedir = process.env[if process.platform is 'win32' then 'USERPROFILE' else 'HOME']
   ldir = homedir + '/.log.io/'
   cdir = ldir + 'cache/'
-  fs.mkdirSync cdir if not fs.existsSync cdir  
   fs.mkdirSync ldir if not fs.existsSync ldir
+  fs.mkdirSync cdir if not fs.existsSync cdir
   for c in ['harvester', 'log_server', 'web_server']
     path = ldir + "#{c}.conf"
     copyFile "./conf/#{c}.conf", path if not fs.existsSync path
