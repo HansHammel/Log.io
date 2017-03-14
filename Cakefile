@@ -1,7 +1,7 @@
 {spawn, exec} = require 'child_process'
 fs = require 'fs'
 
-ENV = '/usr/bin/env'
+ENV = 'bash'
 BROWSERIFY = "#{ ENV } ./node_modules/.bin/browserify"
 COFFEE = "#{ ENV } ./node_modules/.bin/coffee"
 MOCHA = "#{ ENV } ./node_modules/.bin/mocha"
