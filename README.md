@@ -9,7 +9,7 @@
 [![david optionalDependency](https://img.shields.io/david/optional/HansHammel/Log.io.coffee.svg)](https://david-dm.org/HansHammel/Log.io.coffee)
 [![david peerDependency](https://img.shields.io/david/peer/HansHammel/Log.io.coffee.svg)](https://david-dm.org/HansHammel/Log.io.coffee)
 [![npms score](https://badges.npms.io/Log.io.coffee.svg)](https://www.np.coffee.com/package/Log.io.coffee)
-[![Known Vulnerabilities](https://snyk.io/test/github/HansHammel/Log.io.coffee.svg)](https://snyk.io/test/github/HansHammel/Log.io.coffee)
+[![Known Vulnerabilities](https://snyk.io/test/github/HansHammel/Log.io.coffee.svg)](https://snyk.io/test/github/HansHammel/Log.io.coffee) [![Greenkeeper badge](https://badges.greenkeeper.io/HansHammel/Log.io.coffee.svg)](https://greenkeeper.io/)
 
 ## So what has changed with this forked version?
 
