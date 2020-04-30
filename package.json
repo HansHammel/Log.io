@@ -39,17 +39,19 @@
     "less": "^3.9.0",
     "mocha": "^6.2.0",
     "sinon": "^7.3.2",
-    "sinon-chai": "^3.3.0"
+    "sinon-chai": "^3.3.0",
+    "snyk": "^1.316.1"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "bin": {
     "log.io-server": "./bin/log.io-server",
     "log.io-harvester": "./bin/log.io-harvester"
   },
   "license": "Apache-2.0",
   "scripts": {
-    "prepublish": "cake build",
-    "postinstall": "cake build && cake ensure:configuration"
-  }
+    "prepublish": "npm run snyk-protect && cake build",
+    "postinstall": "cake build && cake ensure:configuration",
+    "snyk-protect": "snyk protect"
+  },
+  "snyk": true
 }
